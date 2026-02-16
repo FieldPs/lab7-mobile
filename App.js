@@ -1,130 +1,71 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image, Pressable, Alert, StatusBar } from 'react-native';
+import { StyleSheet, Text, View, Pressable, SafeAreaView, StatusBar } from 'react-native';
+import ProfileScreen from './components/ProfileScreen';
+import CurrencyConverter from './components/CurrencyConverter';
 
 export default function App() {
-  const [profileBorderColor, setProfileBorderColor] = useState('#4F46E5'); // Initial color (Indigo)
-
-  const getRandomColor = () => {
-    const hex = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += hex[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  };
-
-  const socialLinks = [
-    { name: 'Facebook', color: '#1877F2' },
-    { name: 'GitHub', color: '#181717' },
-    { name: 'Portfolio', color: '#E4405F' },
-  ];
-
-  const handlePress = (name) => {
-    Alert.alert('Link Pressed', `You pressed ${name}`);
-    setProfileBorderColor(getRandomColor());
-  };
+  const [currentScreen, setCurrentScreen] = useState('profile');
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
-      
-      <View style={styles.card}>
-        <View style={[styles.imageContainer, { borderColor: profileBorderColor }]}>
-          <Image
-            source={{ uri: 'https://cdn.discordapp.com/attachments/1206622839958048829/1220406718443585617/S__12640259.jpg?ex=660ed364&is=65fc5e64&hm=4a1c5ec2f43f05f6390731f2405081e6b36dd1643c72635c43d7c71d9dcd2c4c&' }} // Placeholder image
-            style={styles.profileImage}
-          />
-        </View>
-
-        <Text style={styles.name}>Garfield</Text>
-        <Text style={styles.bio}>React Native Developer</Text>
-
-        <View style={styles.buttonContainer}>
-          {socialLinks.map((link) => (
-            <Pressable
-              key={link.name}
-              style={({ pressed }) => [
-                styles.button,
-                { backgroundColor: link.color, opacity: pressed ? 0.8 : 1, transform: [{ scale: pressed ? 0.98 : 1 }] }
-              ]}
-              onPress={() => handlePress(link.name)}
-            >
-              <Text style={styles.buttonText}>{link.name}</Text>
-            </Pressable>
-          ))}
-        </View>
+      <View style={styles.content}>
+        {currentScreen === 'profile' ? <ProfileScreen /> : <CurrencyConverter />}
       </View>
-    </View>
+
+      <View style={styles.tabBar}>
+        <Pressable 
+          style={[styles.tabItem, currentScreen === 'profile' && styles.activeTab]}
+          onPress={() => setCurrentScreen('profile')}
+        >
+          <Text style={[styles.tabText, currentScreen === 'profile' && styles.activeTabText]}>Profile</Text>
+        </Pressable>
+        <Pressable 
+          style={[styles.tabItem, currentScreen === 'converter' && styles.activeTab]}
+          onPress={() => setCurrentScreen('converter')}
+        >
+          <Text style={[styles.tabText, currentScreen === 'converter' && styles.activeTabText]}>Converter</Text>
+        </Pressable>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F3F4F6', // Light gray background
+    backgroundColor: '#fff',
+  },
+  content: {
+    flex: 1,
+  },
+  tabBar: {
+    flexDirection: 'row',
+    height: 70,
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderTopColor: '#e5e5e5',
+    alignItems: 'center',
+    paddingBottom: 0, 
+  },
+  tabItem: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    height: '100%',
   },
-  card: {
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 30,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
-    elevation: 8,
-    width: '85%',
-    maxWidth: 350,
+  activeTab: {
+    borderTopWidth: 3,
+    borderTopColor: '#4F46E5',
+    backgroundColor: '#F3F4F6',
   },
-  imageContainer: {
-    borderWidth: 4,
-    borderRadius: 75, // Half of width/height
-    padding: 3, // Space between border and image
-    marginBottom: 20,
-  },
-  profileImage: {
-    width: 140,
-    height: 140,
-    borderRadius: 70, // Half of width/height
-  },
-  name: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1F2937',
-    marginBottom: 5,
-  },
-  bio: {
+  tabText: {
     fontSize: 16,
     color: '#6B7280',
-    marginBottom: 25,
+    fontWeight: '500',
   },
-  buttonContainer: {
-    width: '100%',
-    gap: 12,
-  },
-  button: {
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 2,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-    letterSpacing: 0.5,
+  activeTabText: {
+    color: '#4F46E5',
+    fontWeight: 'bold',
   },
 });
