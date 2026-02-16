@@ -1,16 +1,31 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Pressable, SafeAreaView, StatusBar } from 'react-native';
+import { StyleSheet, Text, View, Pressable, StatusBar } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import ProfileScreen from './components/ProfileScreen';
 import CurrencyConverter from './components/CurrencyConverter';
+import BookNavigator from './components/BookNavigator';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('profile');
 
+  const renderScreen = () => {
+    switch (currentScreen) {
+      case 'profile':
+        return <ProfileScreen />;
+      case 'currency':
+        return <CurrencyConverter />;
+      case 'book':
+        return <BookNavigator />;
+      default:
+        return <ProfileScreen />;
+    }
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
       <StatusBar style="auto" />
       <View style={styles.content}>
-        {currentScreen === 'profile' ? <ProfileScreen /> : <CurrencyConverter />}
+        {renderScreen()}
       </View>
 
       <View style={styles.tabBar}>
@@ -21,10 +36,16 @@ export default function App() {
           <Text style={[styles.tabText, currentScreen === 'profile' && styles.activeTabText]}>Profile</Text>
         </Pressable>
         <Pressable 
-          style={[styles.tabItem, currentScreen === 'converter' && styles.activeTab]}
-          onPress={() => setCurrentScreen('converter')}
+          style={[styles.tabItem, currentScreen === 'currency' && styles.activeTab]}
+          onPress={() => setCurrentScreen('currency')}
         >
-          <Text style={[styles.tabText, currentScreen === 'converter' && styles.activeTabText]}>Converter</Text>
+          <Text style={[styles.tabText, currentScreen === 'currency' && styles.activeTabText]}>Currency</Text>
+        </Pressable>
+        <Pressable 
+          style={[styles.tabItem, currentScreen === 'book' && styles.activeTab]}
+          onPress={() => setCurrentScreen('book')}
+        >
+          <Text style={[styles.tabText, currentScreen === 'book' && styles.activeTabText]}>Book</Text>
         </Pressable>
       </View>
     </SafeAreaView>
@@ -60,7 +81,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F3F4F6',
   },
   tabText: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#6B7280',
     fontWeight: '500',
   },
