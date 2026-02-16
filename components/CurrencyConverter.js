@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, KeyboardAvoidingView, Platform, ImageBackground } from 'react-native';
 
+const CurrencyItem = ({ label, value, flag }) => (
+  <View style={styles.resultRow}>
+    <Text style={styles.currencyCode}>{flag} {label}</Text>
+    <Text style={styles.currencyValue}>{value} {label}</Text>
+  </View>
+);
+
 export default function CurrencyConverter() {
   const [thb, setThb] = useState('');
 
@@ -11,6 +18,8 @@ export default function CurrencyConverter() {
   };
 
   const calculate = (amount, rate) => {
+    // C1: Logic Check
+    if (!amount) return '0.00';
     const value = parseFloat(amount);
     if (isNaN(value)) return '0.00';
     return (value * rate).toFixed(2);
@@ -33,27 +42,30 @@ export default function CurrencyConverter() {
           <TextInput
             style={styles.input}
             placeholder="Enter amount"
-            placeholderTextColor="#666" 
-            keyboardType="numeric"
+            placeholderTextColor="#444444ff" 
+            keyboardType="decimal-pad"
             value={thb}
             onChangeText={setThb}
           />
 
           <View style={styles.resultContainer}>
-            <View style={styles.resultRow}>
-              <Text style={styles.currencyCode}>🇺🇸 USD</Text>
-              <Text style={styles.currencyValue}>{calculate(thb, rates.USD)} USD</Text>
-            </View>
+            <CurrencyItem 
+              label="USD" 
+              value={calculate(thb, rates.USD)} 
+              flag="🇺🇸" 
+            />
             <View style={styles.divider} />
-            <View style={styles.resultRow}>
-              <Text style={styles.currencyCode}>🇯🇵 JPY</Text>
-              <Text style={styles.currencyValue}>{calculate(thb, rates.JPY)} JPY</Text>
-            </View>
+            <CurrencyItem 
+              label="JPY" 
+              value={calculate(thb, rates.JPY)} 
+              flag="🇯🇵" 
+            />
             <View style={styles.divider} />
-            <View style={styles.resultRow}>
-              <Text style={styles.currencyCode}>🇪🇺 EUR</Text>
-              <Text style={styles.currencyValue}>{calculate(thb, rates.EUR)} EUR</Text>
-            </View>
+            <CurrencyItem 
+              label="EUR" 
+              value={calculate(thb, rates.EUR)} 
+              flag="🇪🇺" 
+            />
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -74,43 +86,42 @@ const styles = StyleSheet.create({
   },
   glassCard: {
     width: '90%',
-    // High opacity white background for better contrast
-    backgroundColor: 'rgba(255, 255, 255, 0.3)', 
+    backgroundColor: 'rgba(255, 255, 255, 0.4)',
     borderRadius: 20,
     padding: 25,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.9)',
+    borderColor: 'rgba(255, 255, 255, 0.5)',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.25,
     shadowRadius: 10,
-    elevation: 5,
+    elevation: 8, // C2: Elevation > 5
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#333', // Dark text
+    color: '#333',
     textAlign: 'center',
     marginBottom: 30,
   },
   label: {
     fontSize: 16,
-    color: '#333', // Dark text
+    color: '#333',
     marginBottom: 8,
     fontWeight: '600',
   },
   input: {
-    backgroundColor: 'rgba(240, 240, 240, 0.8)', // Light grey input bg
+    backgroundColor: 'rgba(255, 255, 255, 0.5)', 
     borderRadius: 12,
     padding: 15,
-    color: '#333', // Dark text
+    color: '#333',
     fontSize: 18,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#ccc',
     marginBottom: 30,
   },
   resultContainer: {
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(255, 255, 255, 0.6)', // Less opaque to blend better
     borderRadius: 15,
     padding: 10,
     elevation: 2,
@@ -125,7 +136,7 @@ const styles = StyleSheet.create({
   currencyCode: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#444', 
+    color: '#333', 
   },
   currencyValue: {
     fontSize: 20,
@@ -134,7 +145,7 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: 1,
-    backgroundColor: '#eee',
+    backgroundColor: 'rgba(0,0,0,0.1)',
     marginHorizontal: 10,
   },
 });
