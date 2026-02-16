@@ -67,7 +67,7 @@ export default function DashboardScreen() {
     
     const weatherPromise = api.get('https://api.open-meteo.com/v1/forecast?latitude=13.7563&longitude=100.5018&current_weather=true')
         .then(res => {
-            setWeather(res.data);
+            setWeather({ ...res.data, fromCache: res.fromCache });
             setLoadingWeather(false);
             if (res.fromCache) console.log("Weather loaded from cache");
         })
@@ -79,7 +79,7 @@ export default function DashboardScreen() {
 
     const cryptoPromise = api.get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd')
         .then(res => {
-            setCrypto(res.data);
+            setCrypto({ ...res.data, fromCache: res.fromCache });
             setLoadingCrypto(false);
             if (res.fromCache) console.log("Crypto loaded from cache");
         })
