@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import ProfileScreen from './components/ProfileScreen';
 import CurrencyConverter from './components/CurrencyConverter';
 import BookNavigator from './components/BookNavigator';
+import DashboardScreen from './screens/DashboardScreen';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('profile');
@@ -16,6 +17,8 @@ export default function App() {
         return <CurrencyConverter />;
       case 'book':
         return <BookNavigator />;
+      case 'dashboard':
+        return <DashboardScreen />;
       default:
         return <ProfileScreen />;
     }
@@ -46,6 +49,12 @@ export default function App() {
           onPress={() => setCurrentScreen('book')}
         >
           <Text style={[styles.tabText, currentScreen === 'book' && styles.activeTabText]}>Book</Text>
+        </Pressable>
+        <Pressable 
+          style={[styles.tabItem, currentScreen === 'dashboard' && styles.activeTab]}
+          onPress={() => setCurrentScreen('dashboard')}
+        >
+          <Text style={[styles.tabText, currentScreen === 'dashboard' && styles.activeTabText]}>Dashboard</Text>
         </Pressable>
       </View>
     </SafeAreaView>
